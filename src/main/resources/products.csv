@@ -1,0 +1,12 @@
+type,series,model,diagonal,screen type,country,price
+Telephone,S21,Samsung,none,OLED,none,1000
+Television,Q90T,none,65,QLED,Korea,2500
+Telephone,7,iPhone,none,IPS,none,500
+Telephone,9,OnePlus,none,AMOLED,none,800
+Telephone,A52,Samsung,none,SuperAMOLED,none,300
+Telephone,Pixel-6,Google,none,AMOLED,none,400
+Television,X950H,none,65,LED,Japan,3000
+Television,NANO90,none,65,NanoCell,Korea,1500
+Television,A8H,none,55,OLED,Japan,2000
+Television,Q70R,none,65,QLED,Korea,1500
+Television,UK6300,none,43,LED,,500
