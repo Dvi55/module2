@@ -8,6 +8,7 @@ import org.kislun.models.Telephone;
 import org.kislun.models.Television;
 
 import java.io.*;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -30,32 +31,33 @@ public class ShopService {
         random = new Random();
     }
 
-    public void readProductsFromCSV() throws IOException, InvalidLineException {
+    public void readDataFromCSV() throws IOException, InvalidLineException {
         InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("products.csv");
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
+            reader.readLine();
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                System.out.println(data.length);
                 if (data.length != 7) {
-                    throw new InvalidLineException("Invalid line: " + String.join(",", line));
+                    throw new InvalidLineException("Invalid line: " + line);
                 }
+
                 String type = data[0];
                 String series = data[1];
                 String model = data[2];
-                String diagonal = data[3];
-                String screenType = data[4];
-                String country = data[5];
+                int diagonal = data[3].equals("none") ? 0 : Integer.parseInt(data[3]);
+                String screenType = data[4].equals("none") ? null : data[4];
+                String country = data[5].equals("none") ? null : data[5];
                 int price = Integer.parseInt(data[6]);
 
                 if (type.equals("Telephone")) {
                     Telephone telephone = new Telephone(series, model, screenType, price);
-                    products.add(telephone);
+                    invoices.add(new Invoice(Collections.singletonList(telephone), null, type));
                 } else if (type.equals("Television")) {
-                    Television television = new Television(series, Double.parseDouble(diagonal), screenType, country, price);
-                    products.add(television);
+                    Television television = new Television(series, diagonal, screenType, country, price);
+                    invoices.add(new Invoice(Collections.singletonList(television), null, type));
                 } else {
-                    throw new InvalidLineException("Invalid type: " + type);
+                    throw new InvalidLineException("Invalid line: " + line);
                 }
             }
         }
@@ -65,7 +67,7 @@ public class ShopService {
         Customer customer = personService.generateRandomCostumer();
         List<Object> items = new ArrayList<>();
         int total = 0;
-        int itemCount = new Random().nextInt(1, 5);
+        int itemCount = new Random().nextInt(5) + 1; // От 1 до 5 позиций
         for (int i = 0; i < itemCount; i++) {
             Invoice invoice = invoices.get(new Random().nextInt(invoices.size()));
             items.addAll(invoice.getItems());
@@ -144,6 +146,7 @@ public class ShopService {
     public List<Invoice> getOrders() {
         return invoices;
     }
+
     private static double calculateTotalPrice(Invoice invoice) {
         return invoice.getItems().stream()
                 .mapToDouble(item -> {
@@ -157,6 +160,7 @@ public class ShopService {
                 })
                 .sum();
     }
+
     public void sortOrders() {
         invoices.sort(Comparator.comparing((Invoice invoice) -> invoice.getCustomer().getAge())
                 .reversed()

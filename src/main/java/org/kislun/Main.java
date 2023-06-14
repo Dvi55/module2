@@ -7,22 +7,22 @@ import org.kislun.services.ShopService;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 public class Main {
-    public static void main(String[] args) throws InvalidLineException, IOException {
-        ShopService shopService = new ShopService(3000); // Лимит покупки 1000
+    public static void main(String[] args) throws InvalidLineException {
+        ShopService shopService = new ShopService(3000);
         try {
-            shopService.readProductsFromCSV(); // Путь к файлу с товарами
+            shopService.readDataFromCSV();
         } catch (IOException | InvalidLineException e) {
             e.printStackTrace();
             return;
         }
 
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 16; i++) {
             shopService.generateRandomOrder();
         }
-
-        shopService.getStatistics();
 
         shopService.getStatistics();
         System.out.println("Отсортированные заказы:");

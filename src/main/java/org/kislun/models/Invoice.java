@@ -15,6 +15,9 @@ public class Invoice {
         this.type = type;
     }
 
+    public Invoice() {
+    }
+
     public String getItemsAsString() {
         StringBuilder stringBuilder = new StringBuilder();
         for (Object item : items) {
@@ -39,4 +42,5 @@ public class Invoice {
                 })
                 .sum();
     }
+
 }
